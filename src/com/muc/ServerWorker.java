@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Date;
 import java.util.List;
 
 
@@ -70,10 +69,22 @@ public class ServerWorker extends Thread{
                 this.login = login;
                 System.out.println("Login Successful, Welcome, " + login);
 
-                String msgOnline = "Online" + Login + "\n";
+                //send user all other online logins
                 List<ServerWorker> workerList = server.getWorkerList(); //This message will be sent to every user connected to the server.
                 for (ServerWorker worker : workerList) {
-                    worker.send(msgOnline);
+                    if (worker.getLogin() != null) {
+                        if (!login.equals(worker.getLogin())) { //Will ensure the user logging in doesn't get notification of their own prescence.
+                            String msg2 = "online " + worker.getLogin() + "\n";
+                            worker.send(msg2);
+                        }
+                    }
+                }
+                //send other online users the user's status.
+                String onlineMsg = "online" + login + "\n";
+                for(ServerWorker worker : workerList) {
+                    if (!login.equals(worker.getLogin())) { //Will ensure the user logging in doesn't get notification of their own prescence.
+                        worker.send(onlineMsg);
+                    }
                 }
 
             } else {

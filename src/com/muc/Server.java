@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server extends Thread{ //The server is a thread
-    private int serverPort = 0;
+    private int serverPort = 7848;
 
     private final ArrayList <ServerWorker> workerlist = new ArrayList<>();
 
